@@ -378,60 +378,78 @@
      * Отрисовка экрана паузы.
      */
     _drawTextContainer: function(text) {
-      // var wizardPositionX = object.x;
-      // var wizardPositionY = object.y;
-      var canvasWidth = shadowX + 190;
+      var self = this;
       var figureX = 10;
       var figureY = 100;
       var shadowOffset = 10;
       var shadowX = figureX + shadowOffset;
       var shadowY = figureY + shadowOffset;
-      // var canvasWidth = 200;
-      var textX = figureX + 15;
-      var textY = figureY + 20;
+      var containerWidth = 190;
+      var containerHeightMax = 120;
+      var containerHeightMin = 100;
+      var marginX = figureX + 20;
+      var marginY = figureY + 26;
 
        // Отрисовка тени
-      this.ctx.beginPath();
-      this.ctx.moveTo(shadowX, shadowY);
-      this.ctx.lineTo(shadowX, shadowY + 100);
-      this.ctx.lineTo(shadowX + 190, shadowY + 120);
-      this.ctx.lineTo(shadowX + 190, shadowY - 10);
-      this.ctx.closePath();
-      this.ctx.stroke();
-      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
-      this.ctx.fill();
+      self.ctx.beginPath();
+      self.ctx.moveTo(shadowX, shadowY);
+      self.ctx.lineTo(shadowX, shadowY + containerHeightMin);
+      self.ctx.lineTo(shadowX + containerWidth, shadowY + containerHeightMax);
+      self.ctx.lineTo(shadowX + containerWidth, shadowY - 10);
+      self.ctx.closePath();
+      self.ctx.stroke();
+      self.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      self.ctx.fill();
 
        // Отрисовка фигуры
-      this.ctx.beginPath();
-      this.ctx.moveTo(figureX, figureY);
-      this.ctx.lineTo(figureX, figureY + 100);
-      this.ctx.lineTo(figureX + 190, figureY + 120);
-      this.ctx.lineTo(figureX + 190, figureY - 10);
-      this.ctx.closePath();
-      this.ctx.stroke();
-      this.ctx.fillStyle = '#FFFFFF';
-      this.ctx.fill();
+      self.ctx.beginPath();
+      self.ctx.moveTo(figureX, figureY);
+      self.ctx.lineTo(figureX, figureY + containerHeightMin);
+      self.ctx.lineTo(figureX + containerWidth, figureY + containerHeightMax);
+      self.ctx.lineTo(figureX + containerWidth, figureY - 10);
+      self.ctx.closePath();
+      self.ctx.stroke();
+      self.ctx.fillStyle = '#FFFFFF';
+      self.ctx.fill();
 
-       // Отрисовка текста сообщения
-      
-
-      // Перенос слов текста сообщения
-      function textTransfer() {
-        this.ctx.fillStyle = '#000000';
-        this.ctx.font = '16px, "PT Mono"';
-        this.ctx.textBaseline = 'hanging';
-        this.ctx.fillText(text, textX, textY);
-        var words = text.split(' '); // Превращаем строку в массив
-        // var textWidth = canvasWidth - containerWidth;
+      // Функция для переноса строк текста сообщения
+      function getLines() {
+        var words = text.split(' ');
+        var testLine = '';
+        var line = '';
+        var canvasWidth = containerWidth - marginX * 2;
+        var result = [];
 
         for (var i = 0; i <= words.length; i++) {
-          words.pop();
+          testLine += words[i] + ' ';
+          if (self.ctx.measureText(testLine).width > canvasWidth) {
+            result.push(line);
+            line = '';
+            testLine = '';
+          } else {
+            line += words[i] + ' ';
+          }
         }
-        return words;
+        return result;
       }
+      var lines = getLines();
+
+      // Функция, которая будет отрисовывать текст сообщения
+      function drawText(lines) {
+        for (var n = 0; n < lines.length; n++) {
+          self.ctx.fillStyle = '#000000';
+          self.ctx.font = '16px, "PT Mono"';
+          self.ctx.textBaseline = 'hanging';
+          self.ctx.fillText(lines, marginX, marginY);
+        }
+        return lines;
+      }
+
+      var text = drawText(lines);
+      return text;
     },
 
-    _drawPauseScreen: function() {
+    _drawPauseScreen: function(text) {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
           this._drawTextContainer('Стопроцентное попадание! Победа!');
