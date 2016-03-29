@@ -377,19 +377,73 @@
     /**
      * Отрисовка экрана паузы.
      */
+    _drawTextContainer: function(text) {
+      // var wizardPositionX = object.x;
+      // var wizardPositionY = object.y;
+      var canvasWidth = shadowX + 190;
+      var figureX = 10;
+      var figureY = 100;
+      var shadowOffset = 10;
+      var shadowX = figureX + shadowOffset;
+      var shadowY = figureY + shadowOffset;
+      // var canvasWidth = 200;
+      var textX = figureX + 15;
+      var textY = figureY + 20;
+
+       // Отрисовка тени
+      this.ctx.beginPath();
+      this.ctx.moveTo(shadowX, shadowY);
+      this.ctx.lineTo(shadowX, shadowY + 100);
+      this.ctx.lineTo(shadowX + 190, shadowY + 120);
+      this.ctx.lineTo(shadowX + 190, shadowY - 10);
+      this.ctx.closePath();
+      this.ctx.stroke();
+      this.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      this.ctx.fill();
+
+       // Отрисовка фигуры
+      this.ctx.beginPath();
+      this.ctx.moveTo(figureX, figureY);
+      this.ctx.lineTo(figureX, figureY + 100);
+      this.ctx.lineTo(figureX + 190, figureY + 120);
+      this.ctx.lineTo(figureX + 190, figureY - 10);
+      this.ctx.closePath();
+      this.ctx.stroke();
+      this.ctx.fillStyle = '#FFFFFF';
+      this.ctx.fill();
+
+       // Отрисовка текста сообщения
+      
+
+      // Перенос слов текста сообщения
+      function textTransfer() {
+        this.ctx.fillStyle = '#000000';
+        this.ctx.font = '16px, "PT Mono"';
+        this.ctx.textBaseline = 'hanging';
+        this.ctx.fillText(text, textX, textY);
+        var words = text.split(' '); // Превращаем строку в массив
+        // var textWidth = canvasWidth - containerWidth;
+
+        for (var i = 0; i <= words.length; i++) {
+          words.pop();
+        }
+        return words;
+      }
+    },
+
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          this._drawTextContainer('Стопроцентное попадание! Победа!');
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          this._drawTextContainer('Мимо! Попробуй еще раз.');
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          this._drawTextContainer('Игра на паузе...');
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          this._drawTextContainer('Привет! Меня зовут Пендальф Синий и я рад приветствовать тебя. Для начала игры жми пробел.');
           break;
       }
     },
