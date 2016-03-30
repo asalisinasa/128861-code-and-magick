@@ -424,7 +424,7 @@
           testLine += words[i] + ' ';
           if (self.ctx.measureText(testLine).width > canvasWidth) {
             result.push(line);
-            line = '';
+            line = words[i] + ' ';
             testLine = '';
           } else {
             line += words[i] + ' ';
@@ -437,10 +437,11 @@
       // Функция, которая будет отрисовывать текст сообщения
       function drawText(lines) {
         for (var n = 0; n < lines.length; n++) {
+          var lineHeight = marginY + n * 16;
           self.ctx.fillStyle = '#000000';
           self.ctx.font = '16px, "PT Mono"';
           self.ctx.textBaseline = 'hanging';
-          self.ctx.fillText(lines, marginX, marginY);
+          self.ctx.fillText(lines, marginX, lineHeight);
         }
         return lines;
       }
