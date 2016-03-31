@@ -436,7 +436,7 @@
       var lines = getLines();
 
       // Функция, которая будет отрисовывать текст сообщения
-      function drawText(lines) {
+      function drawText() {
         for (var n = 0; n < lines.length; n++) {
           var lineHeight = marginY + n * 16;
           self.ctx.fillStyle = '#000';
@@ -447,11 +447,11 @@
         return lines;
       }
 
-      var text = drawText(lines);
+      text = drawText(lines);
       return text;
     },
 
-    _drawPauseScreen: function(text) {
+    _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
           this._drawTextContainer('Стопроцентное попадание! Победа!');
