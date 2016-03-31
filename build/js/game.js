@@ -389,6 +389,7 @@
       var containerHeightMin = 100;
       var marginX = figureX + 20;
       var marginY = figureY + 26;
+      var font = '16px, "PT Mono"';
 
        // Отрисовка тени
       self.ctx.beginPath();
@@ -421,13 +422,13 @@
         var result = [];
 
         for (var i = 0; i <= words.length; i++) {
-          testLine += words[i] + ' ';
+          testLine = line + words[i] + ' ';
           if (self.ctx.measureText(testLine).width > canvasWidth) {
             result.push(line);
             line = words[i] + ' ';
             testLine = '';
           } else {
-            line += words[i] + ' ';
+            line = testLine;
           }
         }
         return result;
@@ -438,10 +439,10 @@
       function drawText(lines) {
         for (var n = 0; n < lines.length; n++) {
           var lineHeight = marginY + n * 16;
-          self.ctx.fillStyle = '#000000';
-          self.ctx.font = '16px, "PT Mono"';
+          self.ctx.fillStyle = '#000';
+          self.ctx.font = font;
           self.ctx.textBaseline = 'hanging';
-          self.ctx.fillText(lines, marginX, lineHeight);
+          self.ctx.fillText(lines[n], marginX, lineHeight);
         }
         return lines;
       }
