@@ -377,19 +377,93 @@
     /**
      * Отрисовка экрана паузы.
      */
+    _drawTextContainer: function(text) {
+      var self = this;
+      var figureX = 10;
+      var figureY = 100;
+      var shadowOffset = 10;
+      var shadowX = figureX + shadowOffset;
+      var shadowY = figureY + shadowOffset;
+      var containerWidth = 190;
+      var containerHeightMax = 120;
+      var containerHeightMin = 100;
+      var marginX = figureX + 20;
+      var marginY = figureY + 26;
+      var font = '16px, "PT Mono"';
+
+       // Отрисовка тени
+      self.ctx.beginPath();
+      self.ctx.moveTo(shadowX, shadowY);
+      self.ctx.lineTo(shadowX, shadowY + containerHeightMin);
+      self.ctx.lineTo(shadowX + containerWidth, shadowY + containerHeightMax);
+      self.ctx.lineTo(shadowX + containerWidth, shadowY - 10);
+      self.ctx.closePath();
+      self.ctx.stroke();
+      self.ctx.fillStyle = 'rgba(0, 0, 0, 0.7)';
+      self.ctx.fill();
+
+       // Отрисовка фигуры
+      self.ctx.beginPath();
+      self.ctx.moveTo(figureX, figureY);
+      self.ctx.lineTo(figureX, figureY + containerHeightMin);
+      self.ctx.lineTo(figureX + containerWidth, figureY + containerHeightMax);
+      self.ctx.lineTo(figureX + containerWidth, figureY - 10);
+      self.ctx.closePath();
+      self.ctx.stroke();
+      self.ctx.fillStyle = '#FFFFFF';
+      self.ctx.fill();
+
+      // Функция для переноса строк текста сообщения
+      function getLines() {
+        var words = text.split(' ');
+        var testLine = '';
+        var line = '';
+        var canvasWidth = containerWidth - marginX * 2;
+        var result = [];
+
+        for (var i = 0; i <= words.length; i++) {
+          testLine = line + words[i] + ' ';
+          if (self.ctx.measureText(testLine).width > canvasWidth) {
+            result.push(line);
+            line = words[i] + ' ';
+            testLine = '';
+          } else {
+            line = testLine;
+          }
+        }
+        return result;
+      }
+      var lines = getLines();
+
+      // Функция, которая будет отрисовывать текст сообщения
+      function drawText() {
+        for (var n = 0; n < lines.length; n++) {
+          var lineHeight = marginY + n * 16;
+          self.ctx.fillStyle = '#000';
+          self.ctx.font = font;
+          self.ctx.textBaseline = 'hanging';
+          self.ctx.fillText(lines[n], marginX, lineHeight);
+        }
+        return lines;
+      }
+
+      text = drawText(lines);
+      return text;
+    },
+
     _drawPauseScreen: function() {
       switch (this.state.currentStatus) {
         case Verdict.WIN:
-          console.log('you have won!');
+          this._drawTextContainer('Стопроцентное попадание! Победа!');
           break;
         case Verdict.FAIL:
-          console.log('you have failed!');
+          this._drawTextContainer('Мимо! Попробуй еще раз.');
           break;
         case Verdict.PAUSE:
-          console.log('game is on pause!');
+          this._drawTextContainer('Игра на паузе...');
           break;
         case Verdict.INTRO:
-          console.log('welcome to the game! Press Space to start');
+          this._drawTextContainer('Привет! Меня зовут Пендальф Синий и я рад приветствовать тебя. Для начала игры жми пробел.');
           break;
       }
     },

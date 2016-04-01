@@ -1,8 +1,4 @@
 function getMessage(a, b) {
-  var i1 = 0;
-  var i2 = 0;
-  var sum = 0;
-  var length = 0;
 
   if (typeof a === 'boolean') {
     if (a === true) {
@@ -18,16 +14,21 @@ function getMessage(a, b) {
   }
 
   if (Array.isArray(a) && !Array.isArray(b)) {
-    for (i1; i1 < a.length; i1++) {
-      sum += a[i1];
-    }
-    return 'Я прошёл ' + sum + ' шагов';
+    var distance = a.reduce(function(sum, current) {
+      return sum + current;
+    });
+    return 'Я прошёл ' + distance + ' шагов';
   }
 
   if (Array.isArray(a) && Array.isArray(b)) {
-    for (i2; i2 < a.length; i2++) {
-      length += (a[i2] * b[i2]);
-    }
-    return 'Я прошёл ' + length + ' метров';
+    var distanceA = a.reduce(function(sum, current) {
+      return sum + current;
+    });
+    var distanceB = b.reduce(function(sum, current) {
+      return sum + current;
+    });
+    distanceAB = distanceA + distanceB;
+    return 'Я прошёл ' + distanceAB + ' метров';
   }
+
 }
