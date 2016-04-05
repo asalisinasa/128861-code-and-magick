@@ -42,10 +42,6 @@
     element.classList.add('invisible');
   }
 
-  function invisibleElem(element) {
-    element.classList.contains('invisible');
-  }
-
   function checkRatingValue() {
     for (var i = 0; i < formRatingMarks.length; i++) {
       if (formRatingMarks[i].checked) {
@@ -53,53 +49,57 @@
         break;
       }
     }
-    if ((selectedMarkValue < MIN_MARKS_POSITIVE_VALUE) && (formTextField.value.length === null)) {
+    if ((selectedMarkValue < MIN_MARKS_POSITIVE_VALUE) && (formTextField.value.length === 0)) {
       formTextField.required = true;
       showElem(formTextLabel);
-    }
-    if (selectedMarkValue >= MIN_MARKS_POSITIVE_VALUE) {
+    } else {
       formTextField.required = false;
       hideElem(formTextLabel);
     }
   }
 
-  function checkFieldValue(field, label) {
-    if (field.value.length !== null) {
-      hideElem(label);
-    }
-    if (field.value.length === null) {
-      showElem(label);
-    }
-  }
-
-  function closeHint() {
-    if ((invisibleElem(formNameLabel) === true) && (invisibleElem(formTextLabel) === true)) {
+  function validateForm() {
+    if ((formNameField.value.length !== 0) && (!formTextField.required || (formTextField.value.length !== 0))) {
       formSubmitBtn.disabled = false;
       hideElem(formHint);
     }
-    if ((invisibleElem(formNameLabel) === false) || (invisibleElem(formTextLabel) === false)) {
+    if ((formNameField.value.length === 0) || (formTextField.required && (formTextField.value.length !== 0))) {
       formSubmitBtn.disabled = true;
-      hideElem(formHint);
+      showElem(formHint);
+    }
+    if (formTextField.required && (formTextField.value.length === 0)) {
+      formSubmitBtn.disabled = true;
+      showElem(formTextLabel);
+      showElem(formHint);
+    } else {
+      hideElem(formTextLabel);
+    }
+    if (formNameField.value.length === 0) {
+      showElem(formNameLabel);
+    } else {
+      hideElem(formNameLabel);
     }
   }
 
-  formRatingMarks.onclick = function() {
-    checkRatingValue();
-    checkFieldValue(formTextField, formTextLabel);
-    closeHint();
-  };
+  form.addEventListener('click', function(evt) {
+    if (!evt.target.classList.contains('review-mark-label')) {
+      return;
+    }
+    setTimeout(function() {
+      checkRatingValue();
+      validateForm();
+    });
+  }, false);
 
   formNameField.addEventListener('change', function(evt) {
     evt.preventDefault();
     checkRatingValue();
-    checkFieldValue(formNameField, formNameLabel);
-    closeHint();
+    validateForm();
   });
 
   formTextField.addEventListener('change', function(evt) {
     evt.preventDefault();
     checkRatingValue();
-    checkFieldValue(formTextField, formTextLabel);
-    closeHint();
+    validateForm();
   });
 })();
