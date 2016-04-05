@@ -21,7 +21,7 @@
   */
   var MIN_MARKS_POSITIVE_VALUE = 3;
   var form = formContainer.querySelector('.review-form');
-  var formRatingMarks = form.elements['review-mark'];
+  var formRatingMarks = form.querySelector('.review-form-group-mark');
   var formNameField = form.elements['review-name'];
   var formTextField = form.elements['review-text'];
   var formNameLabel = form.querySelector('.review-fields-name');
@@ -43,12 +43,6 @@
   }
 
   function checkRatingValue() {
-    for (var i = 0; i < formRatingMarks.length; i++) {
-      if (formRatingMarks[i].checked) {
-        selectedMarkValue = formRatingMarks[i].value;
-        break;
-      }
-    }
     if ((selectedMarkValue < MIN_MARKS_POSITIVE_VALUE) && (formTextField.value.length === 0)) {
       formTextField.required = true;
       showElem(formTextLabel);
@@ -81,14 +75,12 @@
     }
   }
 
-  form.addEventListener('click', function(evt) {
+  formRatingMarks.addEventListener('click', function(evt) {
     if (!evt.target.classList.contains('review-mark-label')) {
-      return;
+      selectedMarkValue = evt.target.value;
     }
-    setTimeout(function() {
-      checkRatingValue();
-      validateForm();
-    });
+    checkRatingValue();
+    validateForm();
   }, false);
 
   formNameField.addEventListener('change', function(evt) {
