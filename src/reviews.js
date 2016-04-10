@@ -1,6 +1,6 @@
 'use strict';
 
-/* global reviews */
+/* global reviews, document, Image, setTimeout, clearTimeout */
 
 (function() {
   var reviewsFilter = document.querySelector('.reviews-filter');
@@ -20,10 +20,15 @@
  */
   var getReviewsElement = function(data) {
     var review = reviewToClone.cloneNode(true);
-    var reviewImg = reviewsTemplate.querySelector('.review-author');
+    var reviewText = review.querySelector('.review-text');
+    var reviewRating = review.querySelector('.review-rating');
+    var reviewImg = review.querySelector('.review-author');
 
-    review.querySelector('.review-text').textContent = data.description;
-    review.querySelector('.review-rating').textContent = data.rating;
+    reviewRating.style.display = 'inline-block';
+    for(var i = 0; i < data.rating - 1; i++) {
+      reviewRating.parentNode.insertBefore(reviewRating.cloneNode(true), reviewRating.nextSibling);
+    }
+    reviewText.textContent = data.description;
     reviewsList.appendChild(review);
 
     /** @constant {number} IMG_TIMEOUT */
@@ -51,6 +56,7 @@
 
     return review;
   };
+
 
   reviewsFilter.classList.add('invisible');
 
