@@ -67,14 +67,14 @@
     };
 
     img.onerror = function() {
-      reviewImg.classList.add('review-load-failure');
+      review.classList.add('review-load-failure');
     };
 
     img.src = data.author.picture;
 
     imgLoadTimeout = setTimeout(function() {
       img.src = '';
-      reviewImg.classList.add('review-load-failure');
+      review.classList.add('reviews-list-loading');
     }, IMG_TIMEOUT);
 
     return review;

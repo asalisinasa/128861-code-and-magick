@@ -1,5 +1,8 @@
 'use strict';
 
+/* jslint browser: true */
+/* ESLint browser: true */
+
 (function() {
   /**
    * @const
@@ -460,7 +463,7 @@
           this._drawTextContainer('Мимо! Попробуй еще раз.');
           break;
         case Verdict.PAUSE:
-          this._drawTextContainer('Игра на паузе...');
+          this._drawTextContainer('Игра на паузе... Для продолжения - пробел.');
           break;
         case Verdict.INTRO:
           this._drawTextContainer('Привет! Меня зовут Пендальф Синий и я рад приветствовать тебя. Для начала игры жми пробел.');
@@ -756,6 +759,47 @@
   window.Game.Verdict = Verdict;
 
   var game = new Game(document.querySelector('.demo'));
+  var gameContainer = document.querySelector('.demo');
+  var clouds = document.querySelector('.header-clouds');
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
+
+  /**
+  * @param  {HTMLElement} element
+  * @return {Boolean}
+  */
+  var isVisible = function(element) {
+    return element.getBoundingClientRect().bottom < 0;
+  };
+
+  /** @param  {HTMLElement} movedElement */
+  var moveElement = function(movedElement) {
+    movedElement.style.backgroundPosition = -window.pageYOffset + 'px';
+  };
+
+  var pauseGame = function() {
+    if (isVisible(gameContainer)) {
+      game.setGameStatus(window.Game.Verdict.PAUSE);
+    }
+  };
+
+  var setEnabledParallax = function() {
+    if (!isVisible(clouds)) {
+      window.addEventListener('scroll', moveElement(clouds));
+    } else {
+      window.removeEventListener('scroll', moveElement(clouds));
+    }
+  };
+
+  /** @param  {Number} timeout */
+  var throttle = function(method, timeout) {
+    var scrollTimeout;
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(method, timeout);
+  };
+
+  window.addEventListener('scroll', function() {
+    throttle(pauseGame(), 100);
+    throttle(setEnabledParallax(), 100);
+  });
 })();
