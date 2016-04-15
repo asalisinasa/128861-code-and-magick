@@ -153,7 +153,7 @@
   };
 
   var showHideMoreBtn = function() {
-    if (isNextPageAvailable) {
+    if (isNextPageAvailable()) {
       showMoreBtn.classList.remove('invisible');
     } else {
       showMoreBtn.classList.add('invisible');
@@ -161,7 +161,6 @@
   };
 
   var showNextPage = function() {
-    showHideMoreBtn();
     showMoreBtn.addEventListener('click', function() {
       showHideMoreBtn();
       pageNumber++;
@@ -174,6 +173,8 @@
     if (replace) {
       reviewsList.innerHTML = '';
     }
+
+    showHideMoreBtn();
 
     var from = page * PAGE_SIZE;
     var to = from + PAGE_SIZE;
