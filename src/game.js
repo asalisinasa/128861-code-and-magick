@@ -792,11 +792,18 @@
   };
 
   /** @param  {Number} timeout */
-  var throttle = function(method, timeout) {
-    var scrollTimeout;
-    clearTimeout(scrollTimeout);
-    scrollTimeout = setTimeout(method, timeout);
-  };
+  function throttle(method, timeout) {
+    var wait = false;
+    return function() {
+      if (!wait) {
+        method();
+        wait = true;
+        setTimeout(function() {
+          wait = false;
+        }, timeout);
+      }
+    };
+  }
 
   window.addEventListener('scroll', function() {
     throttle(pauseGame(), 100);

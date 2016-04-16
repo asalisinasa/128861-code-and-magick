@@ -74,7 +74,7 @@
 
     imgLoadTimeout = setTimeout(function() {
       img.src = '';
-      review.classList.add('reviews-list-loading');
+      review.classList.add('review-load-failure');
     }, IMG_TIMEOUT);
 
     return review;
