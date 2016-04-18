@@ -4,6 +4,9 @@
 /* ESLint browser: true */
 
 (function() {
+
+  var utilities = require('../utilities');
+
   /**
    * @const
    * @type {number}
@@ -764,49 +767,27 @@
   game.initializeLevelAndStart();
   game.setGameStatus(window.Game.Verdict.INTRO);
 
-  /**
-  * @param  {HTMLElement} element
-  * @return {Boolean}
-  */
-  var isVisible = function(element) {
-    return element.getBoundingClientRect().bottom < 0;
-  };
-
   /** @param  {HTMLElement} movedElement */
   var moveElement = function(movedElement) {
     movedElement.style.backgroundPosition = -window.pageYOffset + 'px';
   };
 
   var pauseGame = function() {
-    if (isVisible(gameContainer)) {
+    if (utilities.isVisible(gameContainer)) {
       game.setGameStatus(window.Game.Verdict.PAUSE);
     }
   };
 
   var setEnabledParallax = function() {
-    if (!isVisible(clouds)) {
+    if (!utilities.isVisible(clouds)) {
       window.addEventListener('scroll', moveElement(clouds));
     } else {
       window.removeEventListener('scroll', moveElement(clouds));
     }
   };
 
-  /** @param  {Number} timeout */
-  function throttle(method, timeout) {
-    var wait = false;
-    return function() {
-      if (!wait) {
-        method();
-        wait = true;
-        setTimeout(function() {
-          wait = false;
-        }, timeout);
-      }
-    };
-  }
-
   window.addEventListener('scroll', function() {
-    throttle(pauseGame(), 100);
-    throttle(setEnabledParallax(), 100);
+    utilities.throttle(pauseGame(), 100);
+    utilities.throttle(setEnabledParallax(), 100);
   });
 })();

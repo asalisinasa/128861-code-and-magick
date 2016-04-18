@@ -1,5 +1,6 @@
 'use strict';
 
-require('./reviews');
-require('./form');
-require('./game');
+require('./utilities');
+require('./reviews/reviews');
+require('./form/form');
+require('./game/game');
