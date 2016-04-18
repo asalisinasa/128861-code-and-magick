@@ -1,6 +1,12 @@
+/** @fileoverview Валидация полей формы, установка cookies */
+
 'use strict';
 
+/* jslint browser: true */
+/* ESLint browser: true */
+
 (function() {
+  var utilities = require('../utilities');
   var browserCookies = require('browser-cookies');
 
   /** @constant {number} MIN_MARKS_POSITIVE_VALUE*/
@@ -24,7 +30,7 @@
 
   formSubmitBtn.disabled = true;
   formNameField.required = true;
-  hideElem(formTextLabel);
+  utilities.hideElem(formTextLabel);
 
   form.onsubmit = function(evt) {
     var currentDate = new Date();
@@ -45,44 +51,36 @@
     this.submit();
   };
 
-  function showElem(element) {
-    element.classList.remove('invisible');
-  }
-
-  function hideElem(element) {
-    element.classList.add('invisible');
-  }
-
   function checkRatingValue() {
     if ((selectedMarkValue < MIN_MARKS_POSITIVE_VALUE) && (formTextField.value.length === 0)) {
       formTextField.required = true;
-      showElem(formTextLabel);
+      utilities.showElem(formTextLabel);
     } else {
       formTextField.required = false;
-      hideElem(formTextLabel);
+      utilities.hideElem(formTextLabel);
     }
   }
 
   function validateForm() {
     if ((formNameField.value.length !== 0) && (!formTextField.required || (formTextField.value.length !== 0))) {
       formSubmitBtn.disabled = false;
-      hideElem(formHint);
+      utilities.hideElem(formHint);
     }
     if ((formNameField.value.length === 0) || (formTextField.required && (formTextField.value.length !== 0))) {
       formSubmitBtn.disabled = true;
-      showElem(formHint);
+      utilities.showElem(formHint);
     }
     if (formTextField.required && (formTextField.value.length === 0)) {
       formSubmitBtn.disabled = true;
-      showElem(formTextLabel);
-      showElem(formHint);
+      utilities.showElem(formTextLabel);
+      utilities.showElem(formHint);
     } else {
-      hideElem(formTextLabel);
+      utilities.hideElem(formTextLabel);
     }
     if (formNameField.value.length === 0) {
-      showElem(formNameLabel);
+      utilities.showElem(formNameLabel);
     } else {
-      hideElem(formNameLabel);
+      utilities.hideElem(formNameLabel);
     }
   }
 
@@ -108,11 +106,11 @@
 
   formOpenButton.onclick = function(evt) {
     evt.preventDefault();
-    formContainer.classList.remove('invisible');
+    utilities.showElem(formContainer);
   };
 
   formCloseButton.onclick = function(evt) {
     evt.preventDefault();
-    formContainer.classList.add('invisible');
+    utilities.hideElem(formContainer);
   };
 })();

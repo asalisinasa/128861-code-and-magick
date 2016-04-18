@@ -1,14 +1,18 @@
+/** @fileoverview Сборка, отрисовка, фильтрация ревью */
+
 'use strict';
 
 /* jslint browser: true */
 /* ESLint browser: true */
 
 (function() {
+  var utilities = require('../utilities');
+
   var reviewsFilter = document.querySelector('.reviews-filter');
   var reviewsList = document.querySelector('.reviews-list');
   var reviewsTemplate = document.querySelector('#review-template');
   var reviewToClone;
-  var showMoreBtn = document.querySelector('.reviews-controls-more');
+  var moreBtn = document.querySelector('.reviews-controls-more');
 
   /** @type {Array.<Object>} */
   var reviews = [];
@@ -80,31 +84,6 @@
     return review;
   };
 
-  /** @param {function(Array.<Object>)} callback */
-  var getReviews = function(callback) {
-    var xhr = new XMLHttpRequest();
-
-    /** @param {ProgressEvent} evt */
-    xhr.onload = function(evt) {
-      var requestObj = evt.target;
-      var response = requestObj.response;
-      var loadedData = JSON.parse(response);
-      callback(loadedData);
-    };
-
-    xhr.error = function() {
-      callback(true);
-    };
-
-    xhr.timeout = 10000;
-    xhr.ontimeout = function() {
-      callback(true);
-    };
-
-    xhr.open('GET', REVIEWS_LOAD_URL);
-    xhr.send();
-  };
-
   var getFilteredReviews = function(filteredReviews, filter) {
     var reviewsToFilter = filteredReviews.slice(0);
     var currentDate = new Date();
@@ -154,14 +133,14 @@
 
   var showHideMoreBtn = function() {
     if (isNextPageAvailable()) {
-      showMoreBtn.classList.remove('invisible');
+      utilities.showElem(moreBtn);
     } else {
-      showMoreBtn.classList.add('invisible');
+      utilities.hideElem(moreBtn);
     }
   };
 
   var showNextPage = function() {
-    showMoreBtn.addEventListener('click', function() {
+    moreBtn.addEventListener('click', function() {
       showHideMoreBtn();
       pageNumber++;
       renderReviews(reviews, pageNumber);
@@ -199,14 +178,14 @@
     });
   };
 
-  reviewsFilter.classList.add('invisible');
+  utilities.hideElem(reviewsFilter);
 
-  getReviews(function(loadedReviews) {
+  utilities.getData(function(loadedReviews) {
     reviews = loadedReviews;
     setFiltrationEnabled();
     renderReviews(reviews, pageNumber);
     showNextPage();
-  });
+  }, REVIEWS_LOAD_URL);
 
-  reviewsFilter.classList.remove('invisible');
+  utilities.showElem(reviewsFilter);
 })();
