@@ -50,18 +50,12 @@ function showGallery(pictureNumb) {
   currentPicture.src = picturesSrc[pictureNumb - 1];
   currentPictureNumber.textContent = pictureNumb;
 
+  setBtnDisabled();
+
   utilities.showElem(galleryOverlay);
 
   btnNext.addEventListener('click', _onNextClick);
   btnPrev.addEventListener('click', _onPrevClick);
-
-  if (pictureNumb < 1) {
-    btnNext.removeEventListener('click', _onNextClick);
-  }
-  if (pictureNumb > picturesList.length + 1) {
-    btnPrev.removeEventListener('click', _onNextClick);
-  }
-
   btnClose.addEventListener('click', _onCloseClick);
   window.addEventListener('keydown', _onDocumentKeyDown);
 }
@@ -75,13 +69,24 @@ gallery.addEventListener('click', function(evt) {
 });
 
 function showNext() {
-  currentPicture.src = picturesSrc[pictureNumber];
-  currentPictureNumber.textContent = pictureNumber++;
+  setBtnDisabled();
+  if(pictureNumber < picturesSrc.length + 1) {
+    currentPicture.src = picturesSrc[pictureNumber];
+    currentPictureNumber.textContent = pictureNumber++;
+  }
 }
 
 function showPrev() {
-  currentPicture.src = picturesSrc[pictureNumber];
-  currentPictureNumber.textContent = pictureNumber--;
+  setBtnDisabled();
+  if(pictureNumber > 0) {
+    currentPicture.src = picturesSrc[pictureNumber];
+    currentPictureNumber.textContent = pictureNumber--;
+  }
+}
+
+function setBtnDisabled() {
+  btnNext.classList.toggle('overlay-gallery-control-disabled', pictureNumber >= picturesSrc.length);
+  btnPrev.classList.toggle('overlay-gallery-control-disabled', pictureNumber <= 1);
 }
 
 function _onNextClick(evt) {
@@ -104,14 +109,18 @@ function closeGallery() {
 
 function _onDocumentKeyDown(evt) {
   evt.preventDefault();
-  if (event.keyCode === utilities.KeyCode.ESC) {
-    closeGallery();
-  }
-  if (event.keyCode === utilities.KeyCode.RIGHT) {
-    showNext();
-  }
-  if (event.keyCode === utilities.KeyCode.LEFT) {
-    showPrev();
+  switch (event.keyCode) {
+    case utilities.KeyCode.ESC:
+      closeGallery();
+      break;
+    case utilities.KeyCode.RIGHT:
+      showNext();
+      break;
+    case utilities.KeyCode.LEFT:
+      showPrev();
+      break;
+    default:
+      break;
   }
 }
 
