@@ -165,9 +165,9 @@
 
   /** @param {string} filter */
   var setFilterEnabled = function(filter) {
-    reviews = getFilteredReviews(reviews, filter);
+    var reviewsToRender = getFilteredReviews(reviews, filter);
     pageNumber = 0;
-    renderReviews(reviews, pageNumber, true);
+    renderReviews(reviewsToRender, pageNumber, true);
   };
 
   var setFiltrationEnabled = function() {

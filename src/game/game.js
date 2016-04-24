@@ -786,8 +786,11 @@
     }
   };
 
+  var pauseGameThrottle = utilities.throttle(pauseGame, 100);
+  var setEnabledParallaxThrottle = utilities.throttle(setEnabledParallax, 100);
+
   window.addEventListener('scroll', function() {
-    utilities.throttle(pauseGame(), 100);
-    utilities.throttle(setEnabledParallax(), 100);
+    pauseGameThrottle();
+    setEnabledParallaxThrottle();
   });
 })();
