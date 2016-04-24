@@ -49,6 +49,7 @@ createGallery();
 function showGallery(pictureNumb) {
   currentPicture.src = picturesSrc[pictureNumb - 1];
   currentPictureNumber.textContent = pictureNumb;
+  pictureNumber = pictureNumb - 1;
 
   setBtnDisabled();
 
@@ -69,24 +70,26 @@ gallery.addEventListener('click', function(evt) {
 });
 
 function showNext() {
-  setBtnDisabled();
-  if(pictureNumber < picturesSrc.length + 1) {
+  pictureNumber++;
+  if(pictureNumber < picturesSrc.length) {
     currentPicture.src = picturesSrc[pictureNumber];
-    currentPictureNumber.textContent = pictureNumber++;
+    currentPictureNumber.textContent = pictureNumber + 1;
   }
+  setBtnDisabled();
 }
 
 function showPrev() {
-  setBtnDisabled();
-  if(pictureNumber > 0) {
+  pictureNumber--;
+  if(pictureNumber > -1) {
     currentPicture.src = picturesSrc[pictureNumber];
-    currentPictureNumber.textContent = pictureNumber--;
+    currentPictureNumber.textContent = pictureNumber + 1;
   }
+  setBtnDisabled();
 }
 
 function setBtnDisabled() {
-  btnNext.classList.toggle('overlay-gallery-control-disabled', pictureNumber >= picturesSrc.length);
-  btnPrev.classList.toggle('overlay-gallery-control-disabled', pictureNumber <= 1);
+  btnNext.classList.toggle('overlay-gallery-control-disabled', pictureNumber >= picturesSrc.length - 1);
+  btnPrev.classList.toggle('overlay-gallery-control-disabled', pictureNumber <= 0);
 }
 
 function _onNextClick(evt) {
