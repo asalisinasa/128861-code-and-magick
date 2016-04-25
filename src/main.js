@@ -1,7 +1,7 @@
 'use strict';
 
 require('./utilities');
-require('./gallery/gallery');
-require('./reviews/reviews');
-require('./form/form');
-require('./game/game');
+require('./gallery');
+require('./reviews');
+require('./form');
+require('./game');
