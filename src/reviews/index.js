@@ -105,6 +105,7 @@ utilities.hideElem(reviewsFilter);
 
 utilities.getData(function(loadedReviews) {
   reviews = loadedReviews;
+  reviewsToRender = reviews;
   renderReviews(reviews, pageNumber, true);
   setFiltrationEnabled();
   showNextPage();
