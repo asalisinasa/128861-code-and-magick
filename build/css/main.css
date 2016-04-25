@@ -522,6 +522,11 @@ input[type=radio]:checked + .review-mark-label {
   background-position: -30px 0;
 }
 
+.overlay-gallery-control-disabled {
+  pointer-events: none;
+  opacity: 0.3;
+}
+
 .overlay-gallery-preview {
   position: relative;
 

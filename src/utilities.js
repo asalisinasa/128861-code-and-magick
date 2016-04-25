@@ -6,6 +6,18 @@
 /* ESLint browser: true */
 
 module.exports = {
+  /** Список кодов клавиш
+   * @enum {number}
+   */
+  KeyCode: {
+    ENTER: 13,
+    SPACE: 32,
+    ESC: 27,
+    LEFT: 37,
+    UP: 38,
+    RIGHT: 39,
+    DOWN: 40
+  },
 
   /** Показывает элемент
    * @param {Element} element
