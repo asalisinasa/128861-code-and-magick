@@ -19,7 +19,7 @@ var Review = function(data, container) {
   this.data = data;
   this.element = getReviewsElement(this.data, container);
 
-  this.onQuizClick = function(evt) {
+  var onQuizClick = function(evt) {
     evt.preventDefault();
     if (evt.target.classList.contains('review-quiz-answer')) {
       evt.target.classList.add('review-quiz-answer-active');
@@ -31,7 +31,7 @@ var Review = function(data, container) {
     this.element.removeEventListener('click', this.onQuizClick);
   };
 
-  this.element.addEventListener('click', this.onQuizClick);
+  this.element.addEventListener('click', onQuizClick);
   container.appendChild(this.element);
 };
 
