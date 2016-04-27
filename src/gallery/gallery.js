@@ -120,35 +120,22 @@ var Gallery = function() {
   };
 
 
-  /** @param {KeyCodeEvent} evt */
   this._onDocumentKeyDown = function(evt) {
     evt.preventDefault();
-    if (evt.keyCode === utilities.KeyCode.ESC) {
-      self.closeGallery();
-    }
-    if (evt.keyCode === utilities.KeyCode.RIGHT) {
-      self.showNext();
-    }
-    if (evt.keyCode === utilities.KeyCode.LEFT) {
-      self.showPrev();
+    switch (evt.keyCode) {
+      case utilities.KeyCode.ESC:
+        self.closeGallery();
+        break;
+      case utilities.KeyCode.RIGHT:
+        self.showNext();
+        break;
+      case utilities.KeyCode.LEFT:
+        self.showPrev();
+        break;
+      default:
+        break;
     }
   };
-
-  // this._onDocumentKeyDown = function(evt) {
-  //   evt.preventDefault();
-  //   switch (evt.keyCode) {
-  //     case utilities.KeyCode.ESC:
-  //       self.closeGallery();
-  //       break;
-  //     case utilities.KeyCode.RIGHT:
-  //       self.showNext();
-  //       break;
-  //     case utilities.KeyCode.LEFT:
-  //       self.showPrev();
-  //       break;
-  //     default:
-  //       break;
-  // }
 
 
   /** @param {MouseEvent} evt */
