@@ -8,11 +8,11 @@
 
 
 var Review = require('./review');
-var getReviewsElement = require('./get-review-element');
 var getFilteredReviews = require('./filter');
 var utilities = require('../utilities');
 
 var reviewsFilter = document.querySelector('.reviews-filter');
+var reviewsFilterItem = reviewsFilter.elements['reviews'];
 var reviewsContainer = document.querySelector('.reviews-list');
 var moreBtn = document.querySelector('.reviews-controls-more');
 
@@ -34,9 +34,15 @@ var PAGE_SIZE = 3;
 /** @type {number} */
 var pageNumber = 0;
 
+/** @type {string} */
+var filterKey = 'filter';
+
+/** @type {string} */
+var currentFilter;
 
 
 /**
+* Постраничная отрисовка отзывов на странице
 * @param {Object} reviewList
 * @param {Number} page
 * @param {Boolean} replace
@@ -83,12 +89,15 @@ var showNextPage = function() {
 };
 
 
-/** @param {string} filter */
+/** Фильтрация отзывов
+* @param {string} filter
+*/
 var setFilterEnabled = function(filter) {
   reviewsToRender = getFilteredReviews(reviews, filter);
-  showHideMoreBtn();
   pageNumber = 0;
   renderReviews(reviewsToRender, pageNumber, true);
+  showHideMoreBtn();
+  localStorage.setItem(filterKey, filter);
 };
 
 
@@ -103,15 +112,25 @@ var setFiltrationEnabled = function() {
 
 utilities.hideElem(reviewsFilter);
 
+
+/** Загрузка отзывов
+* @param {Array.<Object>} loadedReviews
+*/
 utilities.getData(function(loadedReviews) {
   reviews = loadedReviews;
   reviewsToRender = reviews;
-  renderReviews(reviews, pageNumber, true);
+  currentFilter = localStorage.getItem(filterKey);
+
   setFiltrationEnabled();
+
+  if (localStorage.hasOwnProperty(filterKey)) {
+    reviewsFilterItem.value = currentFilter;
+    setFilterEnabled(currentFilter);
+  }
+
+  renderReviews(reviewsToRender, pageNumber, true);
   showNextPage();
 }, REVIEWS_LOAD_URL);
 
+
 utilities.showElem(reviewsFilter);
-
-
-module.exports = getReviewsElement;
