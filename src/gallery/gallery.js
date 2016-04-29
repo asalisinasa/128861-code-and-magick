@@ -25,13 +25,14 @@ var picturesList = galleryElement.getElementsByTagName('IMG');
 /** @constructor */
 var Gallery = function() {
   var self = this;
+  var pictureUrl;
+  this.pictureRegExp = new RegExp(/#photo\/(\S+)/);
   this.picturesSrc = [];
-  this.pictureNumber = 1;
 
 
   this.getSrcArray = function() {
     for (var i = 0; i < picturesList.length; i++) {
-      this.picturesSrc.push(picturesList[i].getAttribute('src'));
+      self.picturesSrc.push(picturesList[i].getAttribute('src'));
       picturesList[i].id = i + 1;
     }
   };
@@ -44,13 +45,26 @@ var Gallery = function() {
   };
 
 
-  /** @param {Number} pictureNumb */
-  this.showGallery = function(pictureNumb) {
-    self.currentPicture.src = self.picturesSrc[pictureNumb - 1];
-    currentPictureNumber.textContent = pictureNumb;
-    self.pictureNumber = pictureNumb - 1;
-
+  this.changePicture = function(pictureNumb) {
+    self.pictureNumber = pictureNumb;
+    self.currentPicture.src = self.picturesSrc[self.pictureNumber - 1];
+    currentPictureNumber.textContent = self.pictureNumber;
     self.setBtnDisabled();
+  };
+
+  this.changeURL = function(url) {
+    if(url) {
+      pictureUrl = '#photo/' + url;
+      location.hash = pictureUrl;
+    } else {
+      window.location.hash = '';
+    }
+  };
+
+
+  /** @param {Number} pictureNumb */
+  this.showGallery = function(picture) {
+    this.changePicture(picture);
 
     utilities.showElem(galleryOverlay);
 
@@ -65,15 +79,18 @@ var Gallery = function() {
   this.onGalleryClick = function(evt) {
     evt.preventDefault();
     if (evt.target.tagName === 'IMG') {
-      self.pictureNumber = evt.target.id;
-      self.showGallery(self.pictureNumber);
+      self.changeURL(evt.target.getAttribute('src'));
+      self.pictureNumber = +evt.target.id;
     }
   };
 
 
-  this.setBtnDisabled = function() {
-    btnNext.classList.toggle('overlay-gallery-control-disabled', self.pictureNumber >= self.picturesSrc.length - 1);
-    btnPrev.classList.toggle('overlay-gallery-control-disabled', self.pictureNumber <= 0);
+  this._onHashChange = function() {
+    if (location.hash.match(self.pictureRegExp)) {
+      self.showGallery(self.pictureNumber);
+    } else {
+      self.closeGallery();
+    }
   };
 
 
@@ -93,9 +110,8 @@ var Gallery = function() {
 
   this.showNext = function() {
     self.pictureNumber++;
-    if(self.pictureNumber < self.picturesSrc.length) {
-      self.currentPicture.src = self.picturesSrc[self.pictureNumber];
-      currentPictureNumber.textContent = self.pictureNumber + 1;
+    if(self.pictureNumber < self.picturesSrc.length + 1) {
+      self.changeURL(self.picturesSrc[self.pictureNumber - 1]);
     }
     self.setBtnDisabled();
   };
@@ -104,15 +120,21 @@ var Gallery = function() {
   this.showPrev = function() {
     self.pictureNumber--;
     if(self.pictureNumber > -1) {
-      self.currentPicture.src = self.picturesSrc[self.pictureNumber];
-      currentPictureNumber.textContent = self.pictureNumber + 1;
+      self.changeURL(self.picturesSrc[self.pictureNumber - 1]);
     }
     self.setBtnDisabled();
   };
 
 
+  this.setBtnDisabled = function() {
+    btnNext.classList.toggle('overlay-gallery-control-disabled', self.pictureNumber >= self.picturesSrc.length);
+    btnPrev.classList.toggle('overlay-gallery-control-disabled', self.pictureNumber <= 1);
+  };
+
+
   this.closeGallery = function() {
     utilities.hideElem(galleryOverlay);
+
     btnNext.removeEventListener('click', self._onNextClick);
     btnPrev.removeEventListener('click', self._onPrevClick);
     btnClose.removeEventListener('click', self._onCloseClick);
@@ -124,7 +146,7 @@ var Gallery = function() {
     evt.preventDefault();
     switch (evt.keyCode) {
       case utilities.KeyCode.ESC:
-        self.closeGallery();
+        self.changeURL();
         break;
       case utilities.KeyCode.RIGHT:
         self.showNext();
@@ -141,11 +163,13 @@ var Gallery = function() {
   /** @param {MouseEvent} evt */
   this._onCloseClick = function(evt) {
     evt.preventDefault();
-    self.closeGallery();
+    self.changeURL();
   };
 
 
   this.createGallery();
+  this._onHashChange();
+  window.addEventListener('hashchange', this._onHashChange);
 };
 
 module.exports = new Gallery();
