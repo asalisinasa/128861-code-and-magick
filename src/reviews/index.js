@@ -123,9 +123,11 @@ utilities.getData(function(loadedReviews) {
 
   setFiltrationEnabled();
 
-  if (localStorage.hasOwnProperty(filterKey)) {
-    reviewsFilterItem.value = currentFilter;
-    setFilterEnabled(currentFilter);
+  for (var i = 0; i < localStorage.length; i++) {
+    if (localStorage.key(i) === filterKey && localStorage.hasOwnProperty(filterKey)) {
+      reviewsFilterItem.value = currentFilter;
+      setFilterEnabled(currentFilter);
+    }
   }
 
   renderReviews(reviewsToRender, pageNumber, true);
