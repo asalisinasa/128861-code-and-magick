@@ -26,7 +26,6 @@ var picturesList = galleryElement.getElementsByTagName('IMG');
 var Gallery = function() {
   var self = this;
   var pictureUrl;
-  this.pictureRegExp = new RegExp(/#photo\/(\S+)/);
   this.picturesSrc = [];
 
 
@@ -86,11 +85,16 @@ var Gallery = function() {
 
 
   this._onHashChange = function() {
-    if (location.hash.match(self.pictureRegExp)) {
+    var pictureRegExp = new RegExp(/#photo\/(\S+)/);
+    var checkHash = location.hash.match(pictureRegExp);
+    if (checkHash) {
+      self.pictureNumber = self.picturesSrc.indexOf(checkHash[1]) + 1;
       self.showGallery(self.pictureNumber);
     } else {
       self.closeGallery();
     }
+    console.log(self.picturesSrc);
+    console.log(checkHash);
   };
 
 
