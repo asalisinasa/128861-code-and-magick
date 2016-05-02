@@ -93,8 +93,6 @@ var Gallery = function() {
     } else {
       self.closeGallery();
     }
-    console.log(self.picturesSrc);
-    console.log(checkHash);
   };
 
 
@@ -137,6 +135,8 @@ var Gallery = function() {
 
 
   this.closeGallery = function() {
+    history.pushState(null, null, window.location.pathname);
+
     utilities.hideElem(galleryOverlay);
 
     btnNext.removeEventListener('click', self._onNextClick);
