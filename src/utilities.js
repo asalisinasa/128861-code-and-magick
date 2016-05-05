@@ -2,8 +2,7 @@
 
 'use strict';
 
-/* jslint browser: true */
-/* ESLint browser: true */
+
 
 module.exports = {
   /** Список кодов клавиш
@@ -83,5 +82,18 @@ module.exports = {
 
     xhr.open('GET', url);
     xhr.send();
+  },
+
+  /** Механизм наследования
+ * @param   {Object}  ChildClass
+ * @param   {Object}  ParentClass
+ */
+  inherit: function(ParentClass, ChildClass) {
+    var EmptyConstructor = function() {};
+
+    EmptyConstructor.prototype = ParentClass.prototype;
+    ChildClass.prototype = new EmptyConstructor();
+    ChildClass.prototype.constructor = ChildClass;
+    ChildClass.prototype.superclass = ParentClass.prototype;
   }
 };
