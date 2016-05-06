@@ -390,9 +390,10 @@ Game.prototype = {
     var containerWidth = 190;
     var containerHeightMax = 120;
     var containerHeightMin = 100;
-    var marginX = figureX + 20;
+    var marginX = figureX + 15;
     var marginY = figureY + 26;
-    var font = '16px, "PT Mono"';
+    var font = '16px "PT Mono"';
+    var lines;
 
      // Отрисовка тени
     self.ctx.beginPath();
@@ -436,7 +437,8 @@ Game.prototype = {
       }
       return result;
     }
-    var lines = getLines();
+
+    lines = getLines();
 
     // Функция, которая будет отрисовывать текст сообщения
     function drawText() {
@@ -466,7 +468,7 @@ Game.prototype = {
         this._drawTextContainer('Игра на паузе... Для продолжения - пробел.');
         break;
       case Verdict.INTRO:
-        this._drawTextContainer('Привет! Меня зовут Пендальф Синий и я рад приветствовать тебя. Для начала игры жми пробел.');
+        this._drawTextContainer('Пробел для старта');
         break;
     }
   },
