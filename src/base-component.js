@@ -5,8 +5,6 @@
 
 
 
-var utilities = require('./utilities');
-
 function BaseComponent(data, container) {
   this.data = data;
   this.container = container;
