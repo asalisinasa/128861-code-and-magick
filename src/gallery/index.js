@@ -2,8 +2,6 @@
 
 'use strict';
 
-/* jslint browser: true */
-/* ESLint browser: true */
 
 
 var gallery = require('./gallery');

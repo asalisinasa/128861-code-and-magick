@@ -3,8 +3,6 @@
 
 'use strict';
 
-/* jslint browser: true */
-/* ESLint browser: true */
 
 
 var utilities = require('../utilities');

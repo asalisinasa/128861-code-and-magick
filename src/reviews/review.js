@@ -3,10 +3,10 @@
 
 'use strict';
 
-/* jslint browser: true */
-/* ESLint browser: true */
 
 
+var utilities = require('../utilities');
+var BaseComponent = require('../base-component');
 var getReviewsElement = require('./get-review-element');
 
 
@@ -15,24 +15,37 @@ var getReviewsElement = require('./get-review-element');
 * @param {HTMLElement} container
 * @constructor
 */
-var Review = function(data, container) {
-  this.data = data;
-  this.element = getReviewsElement(this.data, container);
+var Review = function(data, reviewsContainer) {
+  BaseComponent.call(this, data, reviewsContainer);
 
-  var onQuizClick = function(evt) {
-    evt.preventDefault();
-    if (evt.target.classList.contains('review-quiz-answer')) {
-      evt.target.classList.add('review-quiz-answer-active');
-    }
-  };
+  this.element = getReviewsElement(this.data, this.container);
 
-  this.remove = function() {
-    this.element.parentNode.removeChild(this.element);
-    this.element.removeEventListener('click', onQuizClick);
-  };
+  this.add();
+  this.remove = this.remove.bind(this);
+  this._onQuizClick = this._onQuizClick.bind(this);
+};
 
-  this.element.addEventListener('click', onQuizClick);
-  container.appendChild(this.element);
+
+utilities.inherit(BaseComponent, Review);
+
+
+Review.prototype.add = function() {
+  BaseComponent.prototype.add.call(this);
+  this.element.addEventListener('click', this._onQuizClick);
+};
+
+
+Review.prototype._onQuizClick = function(evt) {
+  evt.preventDefault();
+  if (evt.target.classList.contains('review-quiz-answer')) {
+    evt.target.classList.add('review-quiz-answer-active');
+  }
+};
+
+
+Review.prototype.remove = function() {
+  BaseComponent.prototype.remove.call(this);
+  this.element.removeEventListener('click', this._onQuizClick);
 };
 
 
